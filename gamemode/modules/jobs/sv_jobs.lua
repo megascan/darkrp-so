@@ -40,7 +40,7 @@ function meta:changeTeam(t, force, suppressNotification, ignoreMaxMembers)
         if isnumber(TEAM.NeedToChangeFrom) and prevTeam ~= TEAM.NeedToChangeFrom then
             notify(self, 1,4, DarkRP.getPhrase("need_to_be_before", team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
             return false
-        elseif istable(TEAM.NeedToChangeFrom) and not table.HasValue(TEAM.NeedToChangeFrom, prevTeam) then
+        elseif istable(TEAM.NeedToChangeFrom) and not TEAM.NeedToChangeFrom[prevTeam] then
             local teamnames = ""
             for _, b in pairs(TEAM.NeedToChangeFrom) do
                 teamnames = teamnames .. " or " .. team.GetName(b)
@@ -73,7 +73,7 @@ function meta:changeTeam(t, force, suppressNotification, ignoreMaxMembers)
         end
         return false
     end
-    
+
     self:updateJob(TEAM.name)
     self:setSelfDarkRPVar("salary", TEAM.salary)
     notifyAll(0, 4, DarkRP.getPhrase("job_has_become", self:Nick(), TEAM.name))
@@ -86,7 +86,7 @@ function meta:changeTeam(t, force, suppressNotification, ignoreMaxMembers)
         for _, v in pairs(DarkRPEntities) do
             if GAMEMODE.Config.preventClassItemRemoval[v.ent] then continue end
             if not v.allowed then continue end
-            if istable(v.allowed) and (table.HasValue(v.allowed, t) or not table.HasValue(v.allowed, prevTeam)) then continue end
+            if istable(v.allowed) and (v.allowed[t] or not v.allowed[prevTeam]) then continue end
             for _, e in ipairs(ents.FindByClass(v.ent)) do
                 if e.SID == self.SID then e:Remove() end
             end
@@ -94,7 +94,7 @@ function meta:changeTeam(t, force, suppressNotification, ignoreMaxMembers)
 
         if not GAMEMODE.Config.preventClassItemRemoval["spawned_shipment"] then
             for _, v in ipairs(ents.FindByClass("spawned_shipment")) do
-                if v.allowed and istable(v.allowed) and table.HasValue(v.allowed, t) then continue end
+                if v.allowed and istable(v.allowed) and v.allowed[t] then continue end
                 if v.SID == self.SID then v:Remove() end
             end
         end
@@ -167,7 +167,7 @@ end
 function meta:teamBan(t, time)
     if not self.bannedfrom then self.bannedfrom = {} end
     t = t or self:Team()
-    
+
     self.bannedfrom[t] = true
 
     local timerid = "teamban" .. self:UserID() .. "," .. t

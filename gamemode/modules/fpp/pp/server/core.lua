@@ -172,7 +172,7 @@ end
 hook.Add("OnPhysgunReload", "FPP.Protect.PhysgunReload", FPP.Protect.PhysgunReload)
 
 function FPP.PhysgunFreeze(weapon, phys, ent, ply)
-    if FPP.UnGhost then 
+    if FPP.UnGhost then
         timer.Simple(0.2,function()
             if not IsValid(ent) then return end
             if ent:GetClass() == "prop_physics" then FPP.UnGhost(ply, ent) end
@@ -276,7 +276,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
     end
     if not IsTeam(ply) and not ply:IsAdmin() and not ALLOWED_TOOLS[tool] then return false end
     if ply:IsAdmin() then return true end
-    
+
     if tool ~= "adv_duplicator" and tool ~= "duplicator" and tool ~= "advdupe2" then return end
     if not ENT then return false end
 
@@ -294,7 +294,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
             FPP.Notify(ply, "Duplicating blocked entity " .. lowerClass, false)
             EntTable[k] = nil
         end
-        
+
         if FPP.Blocked.Spawning1[lowerClass] then
             FPP.Notify(ply, "Duplicating blocked entity " .. lowerClass, false)
             EntTable[k] = nil
@@ -330,12 +330,12 @@ function FPP.PlayerDisconnect(ply)
 
     local SteamID = ply:SteamID()
 
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if v:SteamID() == SteamID then
             return
         end
     end
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v.FPPOwnerID ~= SteamID or v:GetPersistent() then continue end
         v:Remove()
     end
@@ -343,11 +343,16 @@ end
 hook.Add("PlayerDisconnected", "FPP.PlayerDisconnect", FPP.PlayerDisconnect)
 
 local backup = ENTITY.FireBullets
-local blockedEffects = {"particleeffect", "smoke", "vortdispel", "helicoptermegabomb"}
+local blockedEffects = {
+    ["particleeffect"] = true,
+    ["smoke"] = true,
+    ["vortdispel"] = true,
+    ["helicoptermegabomb"] = true
+}
 
 function ENTITY:FireBullets(bullet, ...)
     if not bullet.TracerName then return backup(self, bullet, ...) end
-    if table.HasValue(blockedEffects, string.lower(bullet.TracerName)) then
+    if blockedEffects[string.lower(bullet.TracerName)] then
         bullet.TracerName = ""
     end
     return backup(self, bullet, ...)

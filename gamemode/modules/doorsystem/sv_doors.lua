@@ -110,7 +110,7 @@ function pmeta:keysUnOwnAll()
         ent:keysUnOwn(self)
     end
 
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply == self then continue end
 
         for _, ent in pairs(ply.Ownedz or {}) do
@@ -303,7 +303,7 @@ local function UnOwnAll(ply, cmd, args)
         table.insert(unownables, ent)
     end
 
-    for _, otherPly in ipairs(player.GetAll()) do
+    for _, otherPly in player.Iterator() do
         if ply == otherPly then continue end
 
         for _, ent in pairs(otherPly.Ownedz or {}) do

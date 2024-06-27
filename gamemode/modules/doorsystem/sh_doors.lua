@@ -115,7 +115,7 @@ local function canLockUnlock(ply, ent)
     local teamOwn = ent:getKeysDoorTeams()
 
     return ent:isKeysOwnedBy(ply)                                         or
-        (group   and table.HasValue(RPExtraTeamDoors[group] or {}, Team)) or
+        (group   and RPExtraTeamDoors[group] and RPExtraTeamDoors[group][Team]) or
         (teamOwn and teamOwn[Team])
 end
 

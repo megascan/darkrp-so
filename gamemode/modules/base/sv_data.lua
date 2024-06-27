@@ -127,7 +127,7 @@ function DarkRP.initDatabase()
 
             if MySQLite.isMySQL() then -- In a listen server, the connection with the external database is often made AFTER the listen server host has joined,
                                         --so he walks around with the settings from the SQLite database
-                for _, v in ipairs(player.GetAll()) do
+                for _, v in player.Iterator() do
                     DarkRP.offlinePlayerData(v:SteamID(), function(data)
                         local Data = data and data[1]
                         if not IsValid(v) or not Data then return end
@@ -297,7 +297,7 @@ end
 local function resetAllMoney(ply, cmd, args)
     if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then return end
     MySQLite.query("UPDATE darkrp_player SET wallet = " .. GAMEMODE.Config.startingmoney .. " ;")
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         v:setDarkRPVar("money", GAMEMODE.Config.startingmoney)
     end
     if ply:IsPlayer() then
@@ -379,7 +379,7 @@ function DarkRP.storeDoorData(ent)
 end
 
 function setUpNonOwnableDoors()
-    for k,v in pairs(ents.GetAll()) do
+    for k,v in ents.Iterator() do
         if ownableDoors[v:GetClass()] then
             v:setKeysNonOwnable(true)
             --print("Set door unownable for",v)

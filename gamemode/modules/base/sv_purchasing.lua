@@ -17,7 +17,7 @@ function DarkRP.hooks:canBuyPistol(ply, shipment)
     end
 
     if not GAMEMODE.Config.restrictbuypistol or
-    (GAMEMODE.Config.restrictbuypistol and (not shipment.allowed[1] or table.HasValue(shipment.allowed, ply:Team()))) then
+    (GAMEMODE.Config.restrictbuypistol and (not shipment.allowed[1] or shipment.allowed[ply:Team()])) then
         return true
     end
 
@@ -215,7 +215,7 @@ function DarkRP.hooks:canBuyVehicle(ply, vehicle)
         return false, false, "Custom object does not fit map"
     end
 
-    if vehicle.allowed and not table.HasValue(vehicle.allowed, ply:Team()) then
+    if vehicle.allowed and not vehicle.allowed[ply:Team()] then
         return false, false, DarkRP.getPhrase("incorrect_job", "/buyvehicle")
     end
 
@@ -332,7 +332,7 @@ function DarkRP.hooks:canBuyAmmo(ply, ammo)
         return false, false, "Custom object does not fit map"
     end
 
-    if ammo.allowed and not table.HasValue(ammo.allowed, ply:Team()) then
+    if ammo.allowed and not ammo.allowed[ply:Team()] then
         return false, false, DarkRP.getPhrase("incorrect_job", "/buyammo")
     end
 

@@ -72,7 +72,7 @@ end
 hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)
 
 local function KillAFKTimer()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply.AFK_Timer and CurTime() > ply.AFK_Timer and not ply:getDarkRPVar("AFK") and not ply:IsBot() then
             SetAFK(ply)
             ply.AFK_Timer = math.huge

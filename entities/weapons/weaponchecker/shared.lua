@@ -62,9 +62,9 @@ function SWEP:GetStrippableWeapons(ent, callback)
         for _, v in ipairs(ent:GetWeapons()) do
             local class = v:GetClass()
 
-            if GAMEMODE.Config.weaponCheckerHideDefault and (table.HasValue(GAMEMODE.Config.DefaultWeapons, class) or
-                access and table.HasValue(GAMEMODE.Config.AdminWeapons, class) or
-                ent:getJobTable() and ent:getJobTable().weapons and table.HasValue(ent:getJobTable().weapons, class)) then
+            if GAMEMODE.Config.weaponCheckerHideDefault and GAMEMODE.Config.DefaultWeapons[class] or
+                access and GAMEMODE.Config.AdminWeapons[class] or
+                ent:getJobTable() and ent:getJobTable().weapons and ent:getJobTable().weapon[class] then
                 continue
             end
 

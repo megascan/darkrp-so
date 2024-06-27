@@ -25,7 +25,7 @@ function FPP.NotifyAll(text, bool)
         net.WriteString(text)
         net.WriteBool(bool)
     net.Broadcast()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         ply:PrintMessage(HUD_PRINTCONSOLE, text)
     end
 end

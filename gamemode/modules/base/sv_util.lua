@@ -37,7 +37,7 @@ function DarkRP.notifyAll(msgtype, len, msg)
 end
 
 function DarkRP.printMessageAll(msgtype, msg)
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         v:PrintMessage(msgtype, msg)
     end
 end
@@ -119,7 +119,7 @@ function DarkRP.isEmpty(vector, ignore)
     local b = true
 
     for _, v in ipairs(ents.FindInSphere(vector, 35)) do
-        if (v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" or v.NotEmptyPos) and not table.HasValue(ignore, v) then
+        if (v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" or v.NotEmptyPos) and not ignore[v] then
             b = false
             break
         end

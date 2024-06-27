@@ -17,7 +17,7 @@ local function declareTeamCommands(CTeam)
         if plyTeam == k then return false end
         if CTeam.admin == 1 and not ply:IsAdmin() or CTeam.admin == 2 and not ply:IsSuperAdmin() then return false end
         if isnumber(CTeam.NeedToChangeFrom) and plyTeam ~= CTeam.NeedToChangeFrom then return false end
-        if istable(CTeam.NeedToChangeFrom) and not table.HasValue(CTeam.NeedToChangeFrom, plyTeam) then return false end
+        if istable(CTeam.NeedToChangeFrom) and not CTeam.NeedToChangeFrom[plyTeam] then return false end
         if CTeam.customCheck and CTeam.customCheck(ply) == false then return false end
         local numPlayers = team.NumPlayers(k)
         if CTeam.max ~= 0 and ((CTeam.max % 1 == 0 and numPlayers >= CTeam.max) or (CTeam.max % 1 ~= 0 and (numPlayers + 1) / player.GetCount() > CTeam.max)) then return false end
@@ -122,7 +122,7 @@ local function addEntityCommands(tblEnt)
             DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("must_be_alive_to_do_x", DarkRP.getPhrase("buy_x", tblEnt.name)))
             return ""
         end
-        if istable(tblEnt.allowed) and not table.HasValue(tblEnt.allowed, ply:Team()) then
+        if istable(tblEnt.allowed) and not tblEnt.allowed[ply:Team()] then
             DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("incorrect_job", tblEnt.name))
             return ""
         end
@@ -279,7 +279,7 @@ end
 function DarkRP.removeJob(i)
     local job = RPExtraTeams[i]
     jobByCmd[job.command] = nil
-    
+
     removeCustomItem(RPExtraTeams, "jobs", "onJobRemoved", true, i)
 end
 
@@ -453,7 +453,7 @@ function DarkRP.createGroupChat(funcOrTeam, ...)
         table.insert(gm.DarkRPGroupChats, funcOrTeam)
     else
         local teams = {funcOrTeam, ...}
-        table.insert(gm.DarkRPGroupChats, function(ply) return table.HasValue(teams, ply:Team()) end)
+        table.insert(gm.DarkRPGroupChats, function(ply) return teams[ply:Team()] end)
     end
 end
 GM.AddGroupChat = function(_, ...) DarkRP.createGroupChat(...) end

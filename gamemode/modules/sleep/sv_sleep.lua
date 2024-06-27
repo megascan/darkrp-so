@@ -116,7 +116,7 @@ function DarkRP.toggleSleep(player, command)
             v:Clip1(), v:Clip2()}
             --[[{class, ammocount primary, type primary, ammo count secondary, type secondary, clip primary, clip secondary]]
         end
-        
+
         local ragdoll = ents.Create("prop_ragdoll")
         ragdoll:SetPos(player:GetPos())
         ragdoll:SetAngles(Angle(0,player:GetAngles().Yaw,0))
@@ -182,7 +182,7 @@ local function DamageSleepers(ent, dmginfo)
     local ownerint = ent.OwnerINT
     if not ownerint or ownerint == 0 then return end
 
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if v:EntIndex() ~= ownerint then continue end
 
         if attacker == game.GetWorld() then

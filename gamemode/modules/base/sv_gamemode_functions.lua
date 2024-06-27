@@ -58,7 +58,7 @@ function GM:canDropWeapon(ply, weapon)
 
     if not GAMEMODE.Config.dropspawnedweapons then
         local jobTable = ply:getJobTable()
-        if jobTable.weapons and table.HasValue(jobTable.weapons, class) then return false end
+        if jobTable.weapons and jobTable.weapons[class] then return false end
     end
 
     if self.Config.DisallowDrop[class] then return false end
@@ -298,7 +298,7 @@ local DrpCanHear = {}
 
 -- Recreate DrpCanHear after Lua Refresh
 -- This prevents an indexing nil error in PlayerCanHearPlayersVoice
-for _, ply in pairs(player.GetAll()) do
+for _, ply in player.Iterator() do
     DrpCanHear[ply] = {}
 end
 
@@ -714,7 +714,7 @@ local function disableBabyGod(ply)
     -- if there are still players who are babygodded
     local reinstateOldColor = true
 
-    for _, p in ipairs(player.GetAll()) do
+    for _, p in player.Iterator() do
         reinstateOldColor = reinstateOldColor and p.Babygod == nil
     end
 
@@ -891,7 +891,7 @@ local function collectRemoveEntities(ply)
     end
 
     local sid = ply.SID
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v.SID ~= sid or not v:IsVehicle() and not remClasses[string.lower(v:GetClass() or "")] then continue end
 
         table.insert(collect, v)
@@ -948,7 +948,7 @@ function GM:InitPostEntity()
     game.ConsoleCommand("sv_alltalk 0\n")
 
     if GAMEMODE.Config.unlockdoorsonstart then
-        for _, v in ipairs(ents.GetAll()) do
+        for _, v in ents.Iterator() do
             if not v:isDoor() then continue end
             v:Fire("unlock", "", 0)
         end
@@ -988,7 +988,7 @@ end
 
 local function ClearDecals()
     if GAMEMODE.Config.decalcleaner then
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in player.Iterator() do
             p:ConCommand("r_cleardecals")
         end
     end
